@@ -23,6 +23,9 @@ public class Member {
     private String password;
 
     @Column
+    private String name;
+
+    @Column
     private String email;
 
     @Column

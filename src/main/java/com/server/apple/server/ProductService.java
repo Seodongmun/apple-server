@@ -23,7 +23,6 @@ public class ProductService {
         dao.save(vo);
     }
 
-
     // 상품 한개 조회
     public Product view(int id) {
         return dao.findById(id).orElse(null);
