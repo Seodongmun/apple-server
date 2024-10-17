@@ -17,6 +17,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.sql.Array;
+import java.util.ArrayList;
 
 
 @Component
@@ -29,11 +31,10 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
             String token = parseBearerToken(request);
-
             if(token!=null){
                 Member member = tokenProvider.validate(token);
                 // 추출한 인증 정보를 필터링에서 사용할 수 있도록 SecurityContext에 등록
-                AbstractAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(member, member.getPassword());
+                AbstractAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(member, member.getPassword(), new ArrayList<>());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
                 securityContext.setAuthentication(authentication);
@@ -45,7 +46,6 @@ public class JwtFilter extends OncePerRequestFilter {
 }
     private String parseBearerToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
-
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")) {
             return bearerToken.substring(7);
 

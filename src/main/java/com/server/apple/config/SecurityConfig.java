@@ -22,23 +22,25 @@ public class SecurityConfig {
     @Autowired
     private JwtFilter jwtFilter;
 
-    // 소셜로그인 핸들러
     @Autowired
     private OAuth2SucessHandler handler;
 
-    // 전부 허용
+    // 백엔드 서버 : http://localhost:8080
+    // 클라이언트 서버 : http://localhost:3000
+
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws  Exception{
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll())
-                .oauth2Login(oauth2->oauth2.successHandler(handler)) // 소셜로그인 했을때 핸들러이동
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/api/private/*").authenticated()
+                        .anyRequest().permitAll())
+                .oauth2Login(oauth2 -> oauth2.successHandler(handler))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
-    // 비밀번호 암호화 로직
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -48,7 +50,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

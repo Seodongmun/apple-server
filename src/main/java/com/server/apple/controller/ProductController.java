@@ -18,7 +18,6 @@ public class ProductController {
     // 상품 전체보기
     @GetMapping("/product")
     public ResponseEntity viewAll(){
-        System.out.println(service.viewAll());
         return ResponseEntity.status(HttpStatus.OK).body(service.viewAll());
     }
 

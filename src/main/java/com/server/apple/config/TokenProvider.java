@@ -16,6 +16,8 @@ import java.util.Map;
 @Service
 public class TokenProvider {
 
+    private static final String SECRET_KEY = "FlRpX30MqDbiAkmlfArbrmVkDD4RqISskGZmBFax5oGVxzXXWUzTR5JyskiHMIV9M10icegkpi46AdvrcX1E6CmTUBc6IFbTPiD";
+
     private SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512);
 
     public String create(Member member) {
@@ -25,15 +27,17 @@ public class TokenProvider {
                  "id", member.getId(),
                  "email", member.getEmail()
         ))
-        .setIssuedAt(new Date()).setExpiration(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)))
+        .setIssuedAt(new Date())
+        .setExpiration(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)))
         .compact();
     }
 
     public Member validate(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(secretKey)
-                .parseClaimsJwt(token)
+                .parseClaimsJws(token)
                 .getBody();
+
         return Member.builder()
                 .id((String) claims.get("id"))
                 .email((String) claims.get("email"))
