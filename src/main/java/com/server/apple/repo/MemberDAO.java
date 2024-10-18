@@ -16,9 +16,6 @@ public interface MemberDAO extends JpaRepository<Member,String> {
     @Query(value = "SELECT * FROM member WHERE email = :email", nativeQuery = true)
     Optional<Member> findByEmail(@Param("email") String email);
 
-    // SELECT * FROM member WHERE id = id AND password = password
-    @Query(value= "SELECT * FROM member WHERE id = :id AND password = :password", nativeQuery = true)
-    Member find(@Param("id") String id , @Param("password") String password);
     
 
 

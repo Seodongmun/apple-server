@@ -17,7 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class Product {
 
     @Id
-    private int id;
+    @Column(name="product_code")
+    private int productCode;
 
     @Column
     private String title;

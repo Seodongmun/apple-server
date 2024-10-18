@@ -30,5 +30,8 @@ public class Member {
     @Column
     private String phone;
 
+    @Column
+    private String type;
+
 
 }

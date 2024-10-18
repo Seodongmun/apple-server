@@ -36,6 +36,27 @@ public class MemberService {
         return null;
     }
 
+    public boolean passwordCheck(String password){
+        System.out.println("아이디 정보 = " + getId());
+        Member member = dao.findById(getId()) // 아이디로 멤버가 있는지 확인
+                .orElseThrow(()-> new UsernameNotFoundException("Member Not Found")); // 아이디 못찾을시
+        if(bcpe.matches(password , member.getPassword())) {
+            System.out.println("true 리턴");
+            return true;
+        }
+        System.out.println("false 리턴");
+        return false;
+    }
+
+    // 로그인
+    public Member login(String id, String password){
+        Member member = dao.findById(id) // 아이디로 멤버가 있는지 확인
+                .orElseThrow(()-> new UsernameNotFoundException("Member Not Found")); // 아이디 못찾을시
+        if(bcpe.matches(password,member.getPassword())){ // 암호화된 비밀번호와 입력한 비밀번호 매치
+            return member;
+        }
+        return null;
+    }
 
 
 
@@ -56,15 +77,7 @@ public class MemberService {
         dao.save(vo);
     }
 
-    // 로그인
-    public Member login(String id, String password){
-        Member member = dao.findById(id) // 아이디로 멤버가 있는지 확인
-                .orElseThrow(()-> new UsernameNotFoundException("Member Not Found")); // 아이디 못찾을시
-        if(bcpe.matches(password,member.getPassword())){ // 암호화된 비밀번호와 입력한 비밀번호 매치
-            return member;
-        }
-        return null;
-    }
+
 
 
 

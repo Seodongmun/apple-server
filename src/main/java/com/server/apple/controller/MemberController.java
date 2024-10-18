@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 
 @RestController
 @RequestMapping("/api/*")
@@ -26,13 +28,6 @@ public class MemberController {
     public ResponseEntity allMember() {
         return ResponseEntity.status(HttpStatus.OK).body(service.allMember());
     }
-    
-    // 멤버 한명 조회
-//    @GetMapping("/member/{id}")
-//    public ResponseEntity selectMember(@PathVariable(name="id") String id){
-//        return ResponseEntity.status(HttpStatus.OK).body(service.selectMember(id));
-//    }
-
 
     // 멤버 정보 수정
     @PutMapping("/private/member")
@@ -48,6 +43,24 @@ public class MemberController {
         System.out.println("클라이언트에서 받은 아이디 = " + id);
         service.delete(id);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    // 로그인한 사람 비밀번호 체크
+    @PostMapping("/private/member")
+    public ResponseEntity passwordCheck(@RequestBody Member vo) {
+        System.out.println("비밀번호 체크 결과 = " + service.passwordCheck(vo.getPassword()));
+
+        try {
+            if (service.passwordCheck(vo.getPassword())) {
+                return ResponseEntity.status(HttpStatus.OK).build(); // 200인지
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("비밀번호가 다릅니다."); // 400인지
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류 발생.");
+        }
+
     }
 
 

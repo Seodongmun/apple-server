@@ -13,8 +13,6 @@ public class ProductService {
     @Autowired
     private ProductDAO dao;
 
-
-
     // 상품 전체 조회
     public List<Product> viewAll(){
         return dao.findAll();
@@ -26,13 +24,13 @@ public class ProductService {
     }
 
     // 상품 한개 조회
-    public Product view(int id) {
-        return dao.findById(id).orElse(null);
+    public Product view(int productCode) {
+        return dao.findById(productCode).orElse(null);
     }
 
     // 삭제
-    public void delete(int id){
-        dao.deleteById(id);
+    public void delete(int productCode){
+        dao.deleteById(productCode);
     }
     
     // 이미지 추가
