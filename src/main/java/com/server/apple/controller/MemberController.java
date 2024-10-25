@@ -63,8 +63,6 @@ public class MemberController {
 
     }
 
-
-
     // 회원가입
     @PostMapping("/signup")
     public ResponseEntity signup(@RequestBody Member vo) {
@@ -78,7 +76,7 @@ public class MemberController {
         Member member = service.login(vo.getId(), vo.getPassword()); // 로그인 성공
         if (member!=null) {
             String token = tokenProvider.create(member);
-            System.out.println("로그인 할시 토큰 " + token);
+            System.out.println("로그인 발급 토큰 = " + token);
             return ResponseEntity.ok(MemberDTO.builder()
                     .id(member.getId())
                     .token(token)

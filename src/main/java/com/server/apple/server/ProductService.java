@@ -18,20 +18,25 @@ public class ProductService {
         return dao.findAll();
     }
 
-    // 상품 추가
+    // 상품 한개 조회
+    public Product view(int productCode) {
+        Product product = dao.findById(productCode).orElse(null);
+        System.out.println("한개짜리 상품조회 = " + product);
+        return product;
+    }
+
+    // changeProduct (save)
     public void changeProduct(Product vo){
         dao.save(vo);
     }
 
-    // 상품 한개 조회
-    public Product view(int productCode) {
-        return dao.findById(productCode).orElse(null);
-    }
-
     // 삭제
-    public void delete(int productCode){
+    public void deleteProduct(int productCode){
         dao.deleteById(productCode);
     }
+
+
+
     
     // 이미지 추가
     public void addImg(){

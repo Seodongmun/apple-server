@@ -35,18 +35,20 @@ public class OAuth2SucessHandler  extends SimpleUrlAuthenticationSuccessHandler 
         
         // 소셜 로그인 성공 후 사용자 정보 추출
         String email = (String) user.getAttributes().get("email");
-
+        System.out.println(email);
         // DB에서 사용자 정보 조회 ( email로 )
         Member member = dao.findByEmail(email).orElseGet(()->{
             // + 존재하지 않으면 신규 사용자로 등록
+
             return dao.save(Member.builder()
                             .id(email)
                             .email(email)
                             .build());
         });
+
         // JWT 토큰 생성
         String token = tokenProvider.create(member);
-
+        
         // 토큰을 포함한 리다이렉트 처리
         response.sendRedirect("http://localhost:3000/login-success?token=" + token);
     }
