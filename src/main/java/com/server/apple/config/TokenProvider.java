@@ -21,7 +21,6 @@ public class TokenProvider {
     private SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512);
 
     public String create(Member member) {
-        System.out.println("토큰 만들때 member = " + member);
         return Jwts.builder()
                 .signWith(secretKey)
                 .setClaims(Map.of(
@@ -40,7 +39,6 @@ public class TokenProvider {
                 .parseClaimsJws(token)
                 .getBody();
 
-        System.out.println("토큰 프로바이더 토큰 = " + token);
         return Member.builder()
                 .id((String) claims.get("id"))
                 .email((String) claims.get("email"))

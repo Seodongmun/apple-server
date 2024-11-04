@@ -29,6 +29,14 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(service.allMember());
     }
 
+    // 멤버 한명 조회
+    @GetMapping("/member/{id}")
+    public ResponseEntity selectMember(@PathVariable(name="id") String id) {
+//        System.out.println("조회한 아이디 = " + id);
+        return ResponseEntity.status(HttpStatus.OK).body(service.selectMember(id));
+    }
+
+
     // 멤버 정보 수정
     @PutMapping("/private/member")
     public ResponseEntity update(@RequestBody Member vo){
@@ -40,6 +48,7 @@ public class MemberController {
     // 회원 탈퇴
     @DeleteMapping("/private/member/{id}")
     public ResponseEntity delete(@PathVariable(name = "id") String id) {
+
         System.out.println("클라이언트에서 받은 아이디 = " + id);
         service.delete(id);
         return ResponseEntity.status(HttpStatus.OK).build();

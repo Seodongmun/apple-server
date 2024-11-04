@@ -31,6 +31,15 @@ public class Member {
     private String phone;
 
     @Column
+    private String addr;
+
+    @Column(name="addr_detail")
+    private String addrDetail;
+
+    @Column
+    private boolean status;
+
+    @Column
     private String type;
 
 

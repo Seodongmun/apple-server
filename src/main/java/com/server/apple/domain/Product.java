@@ -1,12 +1,11 @@
 package com.server.apple.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.minidev.json.annotate.JsonIgnore;
 import org.springframework.web.multipart.MultipartFile;
 
 @Entity
@@ -31,6 +30,19 @@ public class Product {
 
     @Column
     private String url;
+
+    @Column
+    private int stock;
+
+    @Column
+    private boolean status;
+
+    @Column(name="like_count")
+    private int likeCount;
+
+    @ManyToOne
+    @JoinColumn(name="id")
+    private Member member;
 
 
 

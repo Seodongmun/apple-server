@@ -4,8 +4,9 @@ import com.server.apple.domain.Cart;
 import com.server.apple.domain.CartDTO;
 import com.server.apple.domain.Member;
 import com.server.apple.domain.Product;
-import com.server.apple.repo.CartDAO;
+
 import com.server.apple.server.CartService;
+import com.server.apple.server.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,17 +25,19 @@ public class CartController {
     @Autowired
     private CartService service;
 
-    // 상품 코드, 아이디로 해당 상품 정보 가져오기
+    @Autowired
+    private MemberService memberService;
+
+    // 아이디로 정보 가져오기
     @GetMapping("/select")
-    public ResponseEntity selectCart(@RequestParam("productCode") int productCode,
-                                     @RequestParam("id") String id) {
-        System.out.println("상품코드 오노? = " + productCode);
-        System.out.println("아이디 오노? = " + id);
-        List<Cart> cart = service.selectCart(productCode, id);
-        System.out.println("카트정보 왔니? = " + cart);
+    public ResponseEntity selectCart(@RequestParam("id") String id) {
+
+        List<Cart> cart = service.select(id);
+//        System.out.println("카트정보 왔니? = " + cart);
 
         return ResponseEntity.status(HttpStatus.OK).body(cart);
     }
+
 
     // 추가할때 상품 테이블에 있는 productCode랑 멤버의 id를 받아야함
     @PostMapping("/cart")
@@ -53,48 +56,58 @@ public class CartController {
                 .orderDate(LocalDateTime.now())
                 .build();
 
-        System.out.println("받은 값 = " + cart);
         service.addCart(cart);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    // 회원이 가지고있는 장바구니 상품의 총 카운트
-    @GetMapping("/cart/{id}")
-    public ResponseEntity cartCount(@RequestBody CartDTO dto) {
+    @PostMapping("/cartCount")
+    public ResponseEntity cartCount(@RequestBody Cart vo){
+        Member member = Member.builder()
+                .id(vo.getMember().getId())
+                .build();
+        vo.setMember(member);
+
+        System.out.println("들어온 vo 정보 = " + vo);
+
+        return ResponseEntity.status(HttpStatus.OK).body(service.cartCount(vo.getCartCode(),vo.getMember().getId()));
+    }
+
+    @PostMapping("/findCode")
+    public ResponseEntity findCode(@RequestBody Cart vo){
 
         Member member = Member.builder()
-                .id(dto.getId())
+                .id(vo.getMember().getId())
                 .build();
-
-        Product product = Product.builder()
-                .productCode(dto.getProductCode())
-                .build();
-
-        int count = service.cartCount(member.getId() , product.getProductCode());
-        System.out.println("아이디 = " +  member.getId() + "/ 상품코드 = " + product.getProductCode());
-        System.out.println("총 갯수 = " + count);
-        return ResponseEntity.status(HttpStatus.OK).body(count);
+        System.out.println(member);
+        List<Integer> code = service.findCode(member.getId());
+        System.out.println("코드리스트 = " + code);
+        return ResponseEntity.status(HttpStatus.OK).body(code);
     }
 
-    // 장바구니 count 업데이트
-    @PutMapping("/cart")
-    public ResponseEntity updateCount(@RequestBody Cart vo) {
 
-//        System.out.println("/ vo 변경 카운트" + vo.getCount() + "vo 상품코드 = " + vo.getProductCode() + "/ vo 아이디 = " + vo.getId() );
-//        service.updateCount(vo.getCount(), vo.getProductCode(), vo.getId());
-
-        return ResponseEntity.status(HttpStatus.OK).build();
+    // 장바구니 count + 1 업데이트
+    @PutMapping("/cart/increaseCount")
+    public ResponseEntity increaseCount(@RequestBody Cart vo) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.increaseCount(vo.getCartCode()));
     }
-    
+
+    // 장바구니 count - 1 업데이트
+    @PutMapping("/cart/decreaseCount")
+    public ResponseEntity decreaseCount(@RequestBody Cart vo) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.decreaseCount(vo.getCartCode()));
+    }
+
     // 카트 품목 삭제
     @DeleteMapping("/cart/{cartCode}")
     public ResponseEntity deleteCart(@PathVariable(name="cartCode") int cartCode) {
 
-        System.out.println("삭제 도착");
+        System.out.println("삭제 할 카트코드 = " + cartCode);
         service.deleteCart(cartCode);
         
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+
 
 
 
