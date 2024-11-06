@@ -17,7 +17,7 @@ public class ProductController {
     @Autowired
     private ProductService service;
 
-//    // 상품 전체보기
+    // 상품 전체보기
     @GetMapping("/product")
     public ResponseEntity viewAll(){
 

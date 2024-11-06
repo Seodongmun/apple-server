@@ -29,7 +29,7 @@ public class CartController {
     private MemberService memberService;
 
     // 아이디로 정보 가져오기
-    @GetMapping("/select")
+    @GetMapping("/private/select")
     public ResponseEntity selectCart(@RequestParam("id") String id) {
 
         List<Cart> cart = service.select(id);
@@ -40,7 +40,7 @@ public class CartController {
 
 
     // 추가할때 상품 테이블에 있는 productCode랑 멤버의 id를 받아야함
-    @PostMapping("/cart")
+    @PostMapping("/private/cart")
     public ResponseEntity addCart(@RequestBody CartDTO dto){
 
         Member member = Member.builder()
@@ -60,7 +60,7 @@ public class CartController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @PostMapping("/cartCount")
+    @PostMapping("/private/cartCount")
     public ResponseEntity cartCount(@RequestBody Cart vo){
         Member member = Member.builder()
                 .id(vo.getMember().getId())
@@ -72,7 +72,7 @@ public class CartController {
         return ResponseEntity.status(HttpStatus.OK).body(service.cartCount(vo.getCartCode(),vo.getMember().getId()));
     }
 
-    @PostMapping("/findCode")
+    @PostMapping("/private/findCode")
     public ResponseEntity findCode(@RequestBody Cart vo){
 
         Member member = Member.builder()
@@ -86,19 +86,19 @@ public class CartController {
 
 
     // 장바구니 count + 1 업데이트
-    @PutMapping("/cart/increaseCount")
+    @PutMapping("/private/cart/increaseCount")
     public ResponseEntity increaseCount(@RequestBody Cart vo) {
         return ResponseEntity.status(HttpStatus.OK).body(service.increaseCount(vo.getCartCode()));
     }
 
     // 장바구니 count - 1 업데이트
-    @PutMapping("/cart/decreaseCount")
+    @PutMapping("/private/cart/decreaseCount")
     public ResponseEntity decreaseCount(@RequestBody Cart vo) {
         return ResponseEntity.status(HttpStatus.OK).body(service.decreaseCount(vo.getCartCode()));
     }
 
     // 카트 품목 삭제
-    @DeleteMapping("/cart/{cartCode}")
+    @DeleteMapping("/private/cart/{cartCode}")
     public ResponseEntity deleteCart(@PathVariable(name="cartCode") int cartCode) {
 
         System.out.println("삭제 할 카트코드 = " + cartCode);
