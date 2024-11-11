@@ -60,7 +60,7 @@ public class ProductService {
     }
 
     // 상품 추가
-    public void changeProduct(Product vo){
+    public void create(Product vo){
         dao.save(vo);
     }
 

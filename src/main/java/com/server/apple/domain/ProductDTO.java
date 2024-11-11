@@ -1,5 +1,6 @@
 package com.server.apple.domain;
 
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,8 +13,18 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 public class ProductDTO {
 
-    private MultipartFile file;
+    private MultipartFile productFile;
 
-    private int productId;
+    private String title;
+
+    private String content;
+
+    private int price;
+
+    private int stock;
+
+    private Member member;
+
+    private int productCode;
 
 }

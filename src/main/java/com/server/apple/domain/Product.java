@@ -17,29 +17,22 @@ public class Product {
 
     @Id
     @Column(name="product_code")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int productCode;
-
     @Column
     private String title;
-
     @Column
     private String content;
-
     @Column
     private int price;
-
     @Column
-    private String url;
-
+    private String img;
     @Column
     private int stock;
-
     @Column
     private boolean status;
-
     @Column(name="like_count")
     private int likeCount;
-
     @ManyToOne
     @JoinColumn(name="id")
     private Member member;

@@ -30,10 +30,9 @@ public class CartController {
 
     // 아이디로 정보 가져오기
     @GetMapping("/private/select")
-    public ResponseEntity selectCart(@RequestParam("id") String id) {
+    public ResponseEntity selectCart(@RequestParam(name= "id") String id) {
 
         List<Cart> cart = service.select(id);
-//        System.out.println("카트정보 왔니? = " + cart);
 
         return ResponseEntity.status(HttpStatus.OK).body(cart);
     }
